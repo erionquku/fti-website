@@ -1,9 +1,9 @@
 <?php
 
 if (!function_exists('__')) {
-    include "resources/langs.php";
     function __($text = '', $locale = 'en')
     {
+        include "resources/langs.php";
         echo $$locale[$text] ?? $text;
     }
 }
