@@ -3,5 +3,5 @@
 require_once "load.php";
 
 $view = new \App\View();
-$view->assign('name', 'User');
+$view->setTitle("Welcome");
 $view->display("home.php");
