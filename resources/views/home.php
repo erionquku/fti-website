@@ -2,7 +2,7 @@
 <div class="user-login-5">
     <div class="row bs-reset">
         <div class="col-md-6 bs-reset mt-login-5-bsfix">
-            <div class="login-bg" style="background-image:url('resources/img/fti-background.jpg')"> </div>
+            <div class="login-bg" style="background-image:url('<?php resource('img/fti-background.jpg') ?>')"> </div>
         </div>
         <div class="col-md-6 login-container bs-reset mt-login-5-bsfix">
             <div class="login-content">
