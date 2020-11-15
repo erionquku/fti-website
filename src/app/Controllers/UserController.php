@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\User\User;
 use App\Repositories\Classes\UserRepository;
+use App\Repositories\Contracts\UserRepositoryInterface;
 use Core\Controllers\BaseController;
 
 class UserController extends BaseController
@@ -14,19 +15,15 @@ class UserController extends BaseController
         echo "all users";
     }
 
-    public static function create() : User
+    public static function create()
     {
-        $user = new User();
-        $user->first_name = $_POST["first_name"];
-        $user->last_name = $_POST["last_name"];
-        $user->email = $_POST["email"];
-        $user->password = $_POST["password"];
-        return $user;
+        // TODO : Shfaq registration form
     }
 
-    public static function store()
+    public static function store($request) : User
     {
-        $user = self::create();
+        // TODO : merr nga request vec fushat qe do dhe vendos defaults nqs do kene
+
         if (strlen($user->password) < 6) {
             echo json_encode(array("status" => "fail", "message" => "Please enter password with more than 6 characters"));
             return;
@@ -34,8 +31,9 @@ class UserController extends BaseController
 
         $userRepo = new UserRepository();
         $existing = $userRepo->countBy("email", $user->email);
+
         if ($existing > 0) {
-            echo json_encode(array("status" => "fail", "message" => $existing. " users already registered with this password! Please choose another one! "));
+            echo json_encode(array("status" => "fail", "message" => $existing . " users already registered with this password! Please choose another one! "));
             return;
         }
 
@@ -46,9 +44,30 @@ class UserController extends BaseController
         }
     }
 
+
     public static function show($id)
     {
-        echo "User". $id;
+        echo "User" . $id;
+    }
+
+    /**
+     * TODO Validation
+     *
+     * @param array $request
+     */
+    public static function login(array $request)
+    {
+        $userRepository = new UserRepository();
+        $data = [
+            'email' => $request['email'],
+            'password' => md5($request['password'])
+        ];
+
+        //TODO te duhet dhe nje funksion ne repo per login
+
+        $user = $userRepository->findBy('email', $request['email']);
+
+        $_SESSION['auth'] = $user;
     }
 
 

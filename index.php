@@ -1,6 +1,7 @@
 <?php
 
 require_once "vendor/autoload.php";
+session_start();
 
 $router = new \Core\Router();
 
@@ -9,31 +10,36 @@ $router->addRoute("GET",'/', function(){
     $view->display("home.php");
 });
 
-$router->addRoute("GET",'/login/', function(){
+//TODO beje thjesht qe te shfaqe formin e logimit, se ate do e rreg
+$router->addRoute("GET",'/login', function(){
     $view = new \Core\View();
-    $view->display("login.php");
+    if(!isset($_SESSION['auth'])) {
+        $view->display("login.php");
+    } else {
+        redirect("/");
+    }
 });
 
 $router->addRoute("POST",'/login', function(){
-    \App\Controllers\UserController::show();
+    \App\Controllers\UserController::login($_POST);
 });
 
-$router->addRoute("GET",'/register/', function(){
+//TODO
+$router->addRoute("GET",'/register', function(){
     $view = new \Core\View();
+    $view->setTitle("Register");
     $view->display("register.php");
 });
+
+$router->addRoute("POST",'/register', function(){
+    \App\Controllers\UserController::create($_POST);
+});
+
 
 $router->addRoute("GET",'/users/', function(){
     \App\Controllers\UserController::index();
 });
 
-$router->addRoute("GET",'/users/create', function(){
-    \App\Controllers\UserController::create();
-});
-
-$router->addRoute("POST",'/users/create', function(){
-    \App\Controllers\UserController::store();
-});
 
 $router->addRoute("GET",'/users/:id', function($id){
     \App\Controllers\UserController::show($id);

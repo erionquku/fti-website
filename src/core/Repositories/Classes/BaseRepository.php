@@ -26,14 +26,21 @@ abstract class BaseRepository implements RepositoryInterface
     public function find(int $id): BaseModel
     {
         $model = new $this->model;
-        $result = execute_query("SELECT * FROM $this->table_name WHERE $this->primary_key = $id LIMIT 1")->fetch_assoc();
+        $result = execute_query(
+            "SELECT * FROM $this->table_name
+                WHERE $this->primary_key = $id 
+                LIMIT 1")
+            ->fetch_assoc();
+
         foreach ($result as $key => $value) {
             $model->$key = $value;
         }
+
         return $model;
     }
 
-    public function countBy($column, $value) : int {
+    public function countBy($column, $value): int
+    {
         if (!is_int($value)) {
             $value = "'" . $value . "'";
         }
@@ -44,13 +51,14 @@ abstract class BaseRepository implements RepositoryInterface
     public function findBy($column, $value)
     {
         $model = new $this->model;
-        if (!is_int($value)) {
-            $value = "'" . $value . "'";
-        }
-        $result = execute_query("SELECT * FROM $this->table_name WHERE $column = $value")->fetch_assoc();
+        $value = quote_value($value);
+        $result = execute_query("SELECT * FROM $this->table_name WHERE $column = $value")
+            ->fetch_assoc();
+
         foreach ($result as $key => $value) {
             $model->$key = $value;
         }
+
         return $model;
     }
 
@@ -64,25 +72,39 @@ abstract class BaseRepository implements RepositoryInterface
         $query = "UPDATE $this->table_name SET ";
 
         foreach ($data as $key => $value) {
-
+            $query .= "$key = " . quote_value($value) . ",";
         }
+        $query .= "WHERE $this->primary_key = $id";
 
+        return execute_query($query);
     }
+
 
     public function store(array $data): bool
     {
-        $keys = array();
-        $values = array();
-        foreach ($this->columns() as $column) {
-                $value = trim($data[$column]);
-                $value = escape_string($value);
-                $keys[] = "`{$column}`";
-                $values[] = "'{$value}'";
+//        $keys = array();
+//        $values = array();
+//        foreach ($this->columns() as $column) {
+//            $value = trim($data[$column]);
+//            if (!is_int($value)) {
+//                $value = escape_string($value);
+//                $values[] = "'{$value}'";
+//            } else {
+//                $values[] = $value;
+//            }
+//            $keys[] = "`{$column}`";
+//
+//        }
+//
+//        $query = "INSERT INTO " . $this->table_name . " (" . implode(",", $keys) . ")
+//          VALUES (" . implode(",", $values) . ");";
+//
+//        return execute_query($query);
 
-        }
-
-        $query = "INSERT INTO ". $this->table_name() ." (" . implode(",", $keys) . ") 
-          VALUES (" . implode(",", $values) . ");";
+        $query = "INSERT INTO $this->table_name (" .
+            implode(", ", array_keys($data)) . ") 
+            VALUES (" . implode(", ", escape_strings_from_array(array_values($data))) . ")";
+        dd($query);
 
         return execute_query($query);
     }

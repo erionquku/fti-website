@@ -20,7 +20,7 @@ if (!function_exists('redirect')) {
     function redirect($url, $external = false)
     {
         $base_url = $external ? '' : $_SERVER['SERVER_NAME'] . "/";
-        header("Location: $base_url.$url");
+        header("Location: http://$base_url.$url");
     }
 }
 

@@ -23,8 +23,14 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         return 'id';
     }
 
+
     public function columns(): array
     {
         return array("first_name", "last_name", "email", "password");
+    }
+
+    public function attemptLogin($email, $password)
+    {
+        //todo
     }
 }
