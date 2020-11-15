@@ -32,7 +32,15 @@ abstract class BaseRepository implements RepositoryInterface
 
     public function findBy($column, $value)
     {
-
+        $model = new $this->model;
+        if (!is_int($value)) {
+            $value = "'" . $value . "'";
+        }
+        $result = execute_query("SELECT * FROM $this->table_name WHERE $column = $value")->fetch_assoc();
+        foreach ($result as $key => $value) {
+            $model->$key = $value;
+        }
+        return $model;
     }
 
     public function delete(int $id): bool
@@ -42,7 +50,12 @@ abstract class BaseRepository implements RepositoryInterface
 
     public function update(array $data, $id): bool
     {
-        // TODO: Implement update() method.
+        $query = "UPDATE $this->table_name SET ";
+
+        foreach ($data as $key => $value) {
+
+        }
+
     }
 
     public function store(array $data): bool
