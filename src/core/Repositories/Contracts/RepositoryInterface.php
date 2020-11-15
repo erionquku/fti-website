@@ -10,6 +10,8 @@ interface RepositoryInterface
 
     public function findBy($key, $value);
 
+    public function countBy($key, $value) : int;
+
     public function delete(int $id) : bool;
 
     public function update(array $data, $id) : bool;

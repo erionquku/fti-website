@@ -6,5 +6,5 @@ use Core\Models\BaseModel;
 
 class User extends BaseModel
 {
-    
+
 }

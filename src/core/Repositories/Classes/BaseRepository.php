@@ -2,6 +2,7 @@
 
 namespace Core\Repositories\Classes;
 
+use App\Models\User\User;
 use Core\Models\BaseModel;
 use Core\Repositories\Contracts\RepositoryInterface;
 
@@ -12,6 +13,8 @@ abstract class BaseRepository implements RepositoryInterface
     abstract public function table_name(): string;
 
     abstract public function primary_key(): string;
+
+    abstract public function columns(): array;
 
     public function __construct()
     {
@@ -28,6 +31,14 @@ abstract class BaseRepository implements RepositoryInterface
             $model->$key = $value;
         }
         return $model;
+    }
+
+    public function countBy($column, $value) : int {
+        if (!is_int($value)) {
+            $value = "'" . $value . "'";
+        }
+        $result = execute_query("SELECT count(*) FROM $this->table_name WHERE $column = $value")->fetch_assoc();
+        return $result["count(*)"];
     }
 
     public function findBy($column, $value)
@@ -60,7 +71,20 @@ abstract class BaseRepository implements RepositoryInterface
 
     public function store(array $data): bool
     {
-        // TODO: Implement store() method.
+        $keys = array();
+        $values = array();
+        foreach ($this->columns() as $column) {
+                $value = trim($data[$column]);
+                $value = escape_string($value);
+                $keys[] = "`{$column}`";
+                $values[] = "'{$value}'";
+
+        }
+
+        $query = "INSERT INTO ". $this->table_name() ." (" . implode(",", $keys) . ") 
+          VALUES (" . implode(",", $values) . ");";
+
+        return execute_query($query);
     }
 
     public function all(): array

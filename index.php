@@ -9,6 +9,20 @@ $router->addRoute("GET",'/', function(){
     $view->display("home.php");
 });
 
+$router->addRoute("GET",'/login/', function(){
+    $view = new \Core\View();
+    $view->display("login.php");
+});
+
+$router->addRoute("POST",'/login', function(){
+    \App\Controllers\UserController::show();
+});
+
+$router->addRoute("GET",'/register/', function(){
+    $view = new \Core\View();
+    $view->display("register.php");
+});
+
 $router->addRoute("GET",'/users/', function(){
     \App\Controllers\UserController::index();
 });

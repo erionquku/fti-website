@@ -20,6 +20,11 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
     public function primary_key(): string
     {
-        return 'username';
+        return 'id';
+    }
+
+    public function columns(): array
+    {
+        return array("first_name", "last_name", "email", "password");
     }
 }
