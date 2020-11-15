@@ -29,7 +29,7 @@ class View
     public function display($filename)
     {
         $this->body = "resources/views/" . $filename;
-        include "layout.php";
+        include "resources/layout.php";
     }
 
     /**

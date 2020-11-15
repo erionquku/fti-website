@@ -4,6 +4,11 @@ require_once "vendor/autoload.php";
 
 $router = new \Core\Router();
 
+$router->addRoute("GET",'/', function(){
+    $view = new \Core\View();
+    $view->display("home.php");
+});
+
 $router->addRoute("GET",'/users/', function(){
     \App\Controllers\UserController::index();
 });
