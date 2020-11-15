@@ -21,12 +21,7 @@
   <component name="ChangeListManager">
     <list default="true" id="0f3d1d72-a40a-43d9-a591-2c6cc356e9dd" name="Default Changelist" comment="removed bg">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/User/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/User/User.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpers.php" beforeDir="false" afterPath="$PROJECT_DIR$/util/helpers.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/load.php" beforeDir="false" afterPath="$PROJECT_DIR$/util/load.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/register/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/register/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/translate.php" beforeDir="false" afterPath="$PROJECT_DIR$/util/translate.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,6 +59,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\xampp2\htdocs\fti-website\src\app" />
       <recent name="C:\xampp2\htdocs\fti-website\util" />
     </key>
   </component>
@@ -99,6 +95,10 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="177" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1605454906274">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state x="177" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1440.860@0.0.1440.860" timestamp="1605454906274" />
     <state x="136" y="68" key="MergeDialog" timestamp="1605136882594">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
@@ -107,10 +107,10 @@
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state x="358" y="191" key="MultipleFileMergeDialog/0.0.1440.860@0.0.1440.860" timestamp="1605136882611" />
-    <state x="547" y="153" key="NewPhpClassDialog" timestamp="1605434743686">
+    <state x="547" y="153" key="NewPhpClassDialog" timestamp="1605454314925">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="547" y="153" key="NewPhpClassDialog/0.0.1440.860@0.0.1440.860" timestamp="1605434743686" />
+    <state x="547" y="153" key="NewPhpClassDialog/0.0.1440.860@0.0.1440.860" timestamp="1605454314925" />
     <state x="554" y="353" key="NewPhpFileDialog" timestamp="1605436222974">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
