@@ -6,7 +6,10 @@
     },
     "files" : [
       "src/core/db.php",
-      "src/app/helpers.php"
+      "src/app/helpers.php",
+      "src/core/layout.php",
+      "src/core/translate.php",
+      "src/app/langs.php"
     ]
   }
 }
