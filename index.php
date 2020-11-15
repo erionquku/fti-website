@@ -1,6 +1,6 @@
 <?php
 
-require_once "load.php";
+require_once "util/load.php";
 
 $view = new \App\View();
 $view->setTitle("Welcome");

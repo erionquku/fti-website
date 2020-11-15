@@ -12,34 +12,37 @@
 
 
 <body class="text-center center-body">
-<form class="form-signup">
+<form class="form-signup" action="register.php" method="post">
     <img class="mb-4" src="../resources/img/logo.png" alt="" width="214" height="121">
     <h1 class="h3 mb-3 font-weight-normal">Ju lutem plotesoni te dhenat meposhte</h1>
 
     <div class="container">
         <div class="form-row">
             <div class="col">
-                <input type="text" id="inputFirstName" class="form-control" placeholder="Emri" required autofocus>
+                <input type="text" name="fname" class="form-control" placeholder="Emri" required autofocus>
             </div>
             <div class="col">
-                <input type="text" id="inputLastName" class="form-control" placeholder="Mbiemri" required >
+                <input type="text" name="lname" class="form-control" placeholder="Mbiemri" required >
             </div>
         </div>
         <div class="form-row">
             <div class="col">
-                <input type="text" id="inputFirstName" class="form-control" placeholder="Fakulteti" value="FTI" disabled >
+                <select name="faculty" class="form-control" required >
+                    <option disabled selected>Fakulteti</option>
+                    <option value="fti">FTI</option>
+                </select>
             </div>
             <div class="col">
-                <select type="text" id="inputLastName" class="form-control" placeholder="Viti" required >
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
+                <select name="year" class="form-control" required >
+                    <option value="1">Viti 1</option>
+                    <option value="2">Viti 2</option>
+                    <option value="3">Viti 3</option>
                 </select>
             </div>
         </div>
 
-        <input type="email" id="inputEmail" class="form-control" placeholder="Adresa" required >
-        <input type="password" id="inputPassword" class="form-control" placeholder="Fjalekalimi" required>
+        <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Adresa" required >
+        <input type="password" name="pass" id="inputPassword" class="form-control" placeholder="Fjalekalimi" required>
 
         <button class="btn btn-lg btn-success btn-block" type="submit">Regjistrohu</button>
     </div>
