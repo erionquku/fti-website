@@ -3,6 +3,10 @@
     "psr-4": {
       "App\\" : "src/app",
       "Core\\" : "src/core"
-    }
+    },
+    "files" : [
+      "src/core/db.php",
+      "src/app/helpers.php"
+    ]
   }
 }
