@@ -6,4 +6,4 @@
  */
 include "translate.php";
 include "helpers.php";
-include "app/load.php";
+include "../app/load.php";

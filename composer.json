@@ -1,0 +1,21 @@
+{
+  "name": "vendor_name/fti-website",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "qemal",
+      "email": "qemal.alliu@yahoo.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "App\\" : "app",
+      "Utils\\" : "util"
+    }
+  },
+  "require": {
+
+  }
+}
