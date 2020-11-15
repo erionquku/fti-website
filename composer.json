@@ -7,7 +7,8 @@
     "files" : [
       "src/app/helpers.php",
       "src/core/db.php",
-      "src/core/translate.php"
+      "src/core/translate.php",
+      "src/core/web.php"
     ]
   }
 }

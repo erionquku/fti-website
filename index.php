@@ -2,8 +2,7 @@
 
 require_once "vendor/autoload.php";
 session_start();
-
-$router = new \Core\Router();
+global $router;
 
 $router->addRoute("GET",'/', function(){
     $view = new \Core\View();
@@ -25,15 +24,15 @@ $router->addRoute("POST",'/login', function(){
 });
 
 //TODO
-$router->addRoute("GET",'/register', function(){
+$router->addRoute("GET",'/register/', function(){
     $view = new \Core\View();
     $view->setTitle("Register");
     $view->display("register.php");
-});
+}, 'register');
 
-$router->addRoute("POST",'/register', function(){
-    \App\Controllers\UserController::create($_POST);
-});
+$router->addRoute("POST",'/register/', function(){
+    \App\Controllers\UserController::store($_POST);
+}, 'register.post');
 
 
 $router->addRoute("GET",'/users/', function(){

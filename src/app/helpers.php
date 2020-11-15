@@ -26,7 +26,23 @@ if (!function_exists('redirect')) {
 
 if (!function_exists('resource')) {
 
-    function resource($name = ''){
-        echo "http://".$_SERVER['SERVER_NAME'] . "/resources/" . $name;
+    function resource($name = '')
+    {
+        echo "http://" . $_SERVER['SERVER_NAME'] . "/resources/" . $name;
     }
+}
+
+// better ?
+// TODO: Use
+function route($name): string
+{
+    global $router;
+    return "http://" . $_SERVER['SERVER_NAME'] . $router->getRoute($name);
+}
+
+function array_only($array, $fields): array
+{
+    return array_filter($array, function ($item) use ($fields){
+        return in_array($item, $fields);
+    });
 }

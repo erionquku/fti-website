@@ -6,3 +6,5 @@ function showAlert(type, message, boldMessage = "") {
         '  <strong>' + boldMessage + '</strong> ' + message +
         '</div>'
 }
+
+// shtova edhe nje kshu per te krijuar alerts me kollaj, me funksion :P

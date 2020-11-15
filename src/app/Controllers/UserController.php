@@ -20,14 +20,15 @@ class UserController extends BaseController
         // TODO : Shfaq registration form
     }
 
-    public static function store($request) : User
+    public static function store($request)
     {
+        echo json_encode($request);
+        die;
         // TODO : merr nga request vec fushat qe do dhe vendos defaults nqs do kene
-
-        if (strlen($user->password) < 6) {
+//        if (strlen($user->password) < 6) {
             echo json_encode(array("status" => "fail", "message" => "Please enter password with more than 6 characters"));
             return;
-        }
+//        }
 
         $userRepo = new UserRepository();
         $existing = $userRepo->countBy("email", $user->email);

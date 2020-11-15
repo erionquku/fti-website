@@ -27,7 +27,7 @@
                             <a class="btn btn-lg btn-outline-success" style="width: 50%" href="/login"><?php __("login") ?> <i class="fa fa-sign-in"></i> </a></div>
                         <div class="w-100" style="padding-bottom: 2%"></div>
                         <div class="col" style="padding-bottom: 10%">
-                            <a class="btn btn-lg btn-outline-primary" style="width: 50%" href="/register"><?php __("signup") ?><i class="fa fa-sign-up"></i></a>
+                            <a class="btn btn-lg btn-outline-primary" style="width: 50%" href="<?php echo route('register')?>"><?php __("signup") ?><i class="fa fa-sign-up"></i></a>
                         </div>
                     </div>
                 </div>
