@@ -32,8 +32,6 @@ if (!function_exists('resource')) {
     }
 }
 
-// better ?
-// TODO: Use
 function route($name): string
 {
     global $router;

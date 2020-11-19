@@ -10,5 +10,8 @@
       "src/core/translate.php",
       "src/core/web.php"
     ]
+  },
+  "require": {
+    "ext-json": "*"
   }
 }

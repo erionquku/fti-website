@@ -12,16 +12,13 @@ $router->addRoute("GET",'/', function(){
 //TODO beje thjesht qe te shfaqe formin e logimit, se ate do e rreg
 $router->addRoute("GET",'/login', function(){
     $view = new \Core\View();
-    if(!isset($_SESSION['auth'])) {
+//    if(!isset($_SESSION['auth'])) {
         $view->display("login.php");
-    } else {
-        redirect("/");
-    }
+//    } else {
+//        redirect("/");
+//    }
 });
 
-$router->addRoute("POST",'/login', function(){
-    \App\Controllers\UserController::login($_POST);
-});
 
 //TODO
 $router->addRoute("GET",'/register/', function(){
@@ -30,9 +27,6 @@ $router->addRoute("GET",'/register/', function(){
     $view->display("register.php");
 }, 'register');
 
-$router->addRoute("POST",'/register/', function(){
-    \App\Controllers\UserController::store($_POST);
-}, 'register.post');
 
 
 $router->addRoute("GET",'/users/', function(){
@@ -46,6 +40,10 @@ $router->addRoute("GET",'/users/:id', function($id){
 
 $router->addRoute("GET",'/users/:id', function($id){
     \App\Controllers\UserController::show($id);
+});
+
+$router->addRoute("GET",'/api/asdf', function($id){
+    echo "REQUEST IS GETTING HERE";
 });
 
 $router->doRouting();

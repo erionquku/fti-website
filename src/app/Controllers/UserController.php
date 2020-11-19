@@ -22,19 +22,26 @@ class UserController extends BaseController
 
     public static function store($request)
     {
-        echo json_encode($request);
-        die;
-        // TODO : merr nga request vec fushat qe do dhe vendos defaults nqs do kene
-//        if (strlen($user->password) < 6) {
+        header('Content-type:application/json;charset=utf-8');
+        $user = new User();
+
+        foreach ($user->mandatory_fields as $field) {
+            if (!empty($request[$field]))
+                $user->$field = $request[$field];
+            else
+                exit(json_encode(array('status' => 'fail', 'message' => ___('missing_'.$field))));
+        }
+
+        if (strlen($user->password) < 6) {
             echo json_encode(array("status" => "fail", "message" => "Please enter password with more than 6 characters"));
             return;
-//        }
+        }
 
         $userRepo = new UserRepository();
         $existing = $userRepo->countBy("email", $user->email);
 
         if ($existing > 0) {
-            echo json_encode(array("status" => "fail", "message" => $existing . " users already registered with this password! Please choose another one! "));
+            echo json_encode(array("status" => "fail", "message" => "This email is already registered. You may want to login."));
             return;
         }
 

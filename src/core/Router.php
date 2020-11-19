@@ -13,9 +13,9 @@ class Router
 
     public function doRouting()
     {
-
         $reqUrl = $_SERVER['REQUEST_URI'];
         $reqMet = $_SERVER['REQUEST_METHOD'];
+
 
         foreach ($this->routes as $route) {
             // convert urls like '/users/:uid/posts/:pid' to regular expression
@@ -38,7 +38,7 @@ class Router
             return null;
         }
         foreach ($this->routes as $route) {
-            if($route['name'] == $name){
+            if($route['name'] === $name){
                 return $route['url'];
             }
         }
