@@ -19,7 +19,8 @@
     ],
     "pull" : [
       "git stash save",
-      "git pull origin"
+      "git pull origin",
+      "composer dump autoload"
     ]
   }
 }
