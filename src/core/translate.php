@@ -10,6 +10,9 @@ if (!function_exists('__')) {
 if (!function_exists('___')) {
     function ___($text = '')
     {
+        if($text == null){
+            return null;
+        }
         $locale = strtolower($_SESSION['auth']->lang ?? 'sq');
         include "/xampp2/htdocs/fti-website/resources/langs.php";
         return $$locale[$text] ?? $text;

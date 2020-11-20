@@ -1,8 +1,10 @@
 <?php
+global $router;
+session_start();
 
 require_once "vendor/autoload.php";
-session_start();
-global $router;
+include "api/index.php";
+
 
 $router->addRoute("GET",'/', function(){
     $view = new \Core\View();

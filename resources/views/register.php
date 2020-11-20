@@ -51,7 +51,7 @@
 
     $('#submitBtn').click(function () {
         $.ajax({
-            url: "http://fti.upt.al/api/register",
+            url: "<?php echo route('api.register.post'); ?>",
             method: "POST",
             data: {
                 "first_name": $("#first_name").val(),

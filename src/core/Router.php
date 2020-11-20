@@ -34,11 +34,11 @@ class Router
 
     public function getRoute($name)
     {
-        if($name === null){
+        if ($name === null) {
             return null;
         }
         foreach ($this->routes as $route) {
-            if($route['name'] === $name){
+            if ($route['name'] === $name) {
                 return $route['url'];
             }
         }
