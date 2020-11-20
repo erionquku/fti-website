@@ -8,7 +8,8 @@
       "src/app/helpers.php",
       "src/core/db.php",
       "src/core/translate.php",
-      "src/core/web.php"
+      "src/core/web.php",
+      "resources/langs.php"
     ]
   },
   "scripts": {
