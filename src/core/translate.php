@@ -14,8 +14,7 @@ if (!function_exists('___')) {
         if($text == null){
             return null;
         }
-        $locale = strtolower($_SESSION['auth']->lang ?? 'sq');
-
+        $locale = strtolower($_SESSION['lang']->lang ?? 'sq');
         return $$locale[$text] ?? $text;
     }
 }

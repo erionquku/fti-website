@@ -2,21 +2,32 @@
 
 $router->addRoute("POST",'/api/login', function(){
     \App\Controllers\UserController::login($_POST);
-}, 'api.login.post');
+}, 'api.login');
 
 $router->addRoute("POST",'/api/register', function() {
-
     \App\Controllers\UserController::store($_POST);
+}, 'api.register');
 
-}, 'api.register.post');
+if (!empty($user = logged_in())) {
+    $router->addRoute("POST", '/api/books/upload', function () use ($user) {
+        \App\Controllers\BookController::upload($_POST, $user);
+    }, 'api.books.upload');
+} else {
+//    exit(json_encode(array("success" => false, "message" => "You are not logged in")));
+}
 
-$router->addRoute("GET",'/api/register', function() {
-    echo "api.login.post route is: ";
-    global $router;
-    dd($router->getRoute('api.login.post'));
-}, 'api.register.post2');
+if (!empty($user = logged_in())) {
+    $router->addRoute("GET", '/api/notification/:id', function ($id) use ($user) {
+        \App\Controllers\NotificationController::find($id);
+    }, 'api.notification');
+} else {
+//    exit(json_encode(array("success" => false, "message" => "You are not logged in")));
+}
 
-$router->addRoute("GET", '/api/test/', function (){
-    echo "TESTING";
-    dd("TEST");
-});
+$router->addRoute("GET",'/api/books/download/:id', function($id) {
+    \App\Controllers\BookController::download($id);
+}, 'api.books.download');
+
+//$router->addRoute("GET",'/api/findall', function() {
+//    dd(\App\Controllers\GradeController::findAllByCourseIdAndStudentId('2', '20'), "test");
+//}, 'api.register.post2');

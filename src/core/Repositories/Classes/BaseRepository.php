@@ -32,6 +32,7 @@ abstract class BaseRepository implements RepositoryInterface
                 LIMIT 1")
             ->fetch_assoc();
 
+//        dd($result);
         foreach ($result as $key => $value) {
             $model->$key = $value;
         }
@@ -48,18 +49,58 @@ abstract class BaseRepository implements RepositoryInterface
         return $result["count(*)"];
     }
 
-    public function findBy($column, $value)
+
+    public function countAll(): int
+    {
+        $result = execute_query("SELECT count(*) FROM $this->table_name")->fetch_assoc();
+        return $result["count(*)"];
+    }
+
+    public function findBy($column, $value) : BaseModel
     {
         $model = new $this->model;
         $value = quote_value($value);
         $result = execute_query("SELECT * FROM $this->table_name WHERE $column = $value")
             ->fetch_assoc();
 
-        foreach ($result as $key => $value) {
-            $model->$key = $value;
-        }
+        if (!empty($result))
+            foreach ($result as $key => $value) {
+                $model->$key = $value;
+            }
 
         return $model;
+    }
+
+    public function findAllBy($column, $value) : array
+    {
+        $collection = [];
+        $results = execute_query("SELECT * FROM $this->table_name WHERE $column = $value");
+        foreach ($results as $result) {
+            $model = new $this->model;
+            foreach ($result as $key => $value) {
+                $model->$key = $value;
+            }
+            $collection[] = $model;
+        }
+        return $collection;
+    }
+
+    public function findAllByData($data) : array
+    {
+        $collection = [];
+        $query = "SELECT * FROM $this->table_name WHERE 1=1";
+        foreach ($data as $key => $value) {
+            $query .= " AND $key = " . quote_value($value);
+        }
+        $results = execute_query($query);
+        foreach ($results as $result) {
+            $model = new $this->model;
+            foreach ($result as $key => $value) {
+                $model->$key = $value;
+            }
+            $collection[] = $model;
+        }
+        return $collection;
     }
 
     public function delete(int $id): bool
@@ -78,7 +119,6 @@ abstract class BaseRepository implements RepositoryInterface
 
         return execute_query($query);
     }
-
 
     public function store(array $data): bool
     {
@@ -104,15 +144,13 @@ abstract class BaseRepository implements RepositoryInterface
         $query = "INSERT INTO $this->table_name (" .
             implode(", ", array_keys($data)) . ") 
             VALUES (" . implode(", ", escape_strings_from_array(array_values($data))) . ")";
-        dd($query);
-
         return execute_query($query);
     }
 
     public function all(): array
     {
         $collection = [];
-        $results = execute_query("SELECT * FROM $this->table_name");
+        $results = execute_query("SELECT * FROM " . $this->table_name());
         foreach ($results as $result) {
             $model = new $this->model;
             foreach ($result as $key => $value) {

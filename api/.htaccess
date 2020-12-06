@@ -1,8 +1,8 @@
-RewriteEngine On
-RewriteRule ^$ index.php [QSA,L]
-
-RewriteCond %{REQUEST_FILENAME} -f [OR]
-RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule ^ - [L]
-
-RewriteRule .* index.php?path=$0 [L]
+#RewriteEngine On
+#RewriteRule ^$ index.php [QSA,L]
+#
+#RewriteCond %{REQUEST_FILENAME} -f [OR]
+#RewriteCond %{REQUEST_FILENAME} -d
+#RewriteRule ^ - [L]
+#
+#RewriteRule .* index.php?path=$0 [L]

@@ -23,7 +23,6 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         return 'id';
     }
 
-
     public function columns(): array
     {
         return array("first_name", "last_name", "email", "password");
@@ -31,6 +30,9 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
     public function attemptLogin($email, $password)
     {
-        //todo
+        $user = self::findBy('email', $email);
+        if (!isset($user) || !isset($user->password)) return null;
+
+        return $user->password == $password ? $user : null ;
     }
 }

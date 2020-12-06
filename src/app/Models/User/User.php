@@ -11,6 +11,6 @@ class User extends BaseModel
      */
     public $lang = 'sq';
 
-    public $mandatory_fields = array('first_name', 'last_name', 'email', 'password', 'faculty', 'year');
+    public static $mandatory_fields = array('first_name', 'last_name', 'email', 'password', 'faculty', 'year');
 
 }

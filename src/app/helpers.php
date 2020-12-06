@@ -44,3 +44,25 @@ function array_only($array, $fields): array
         return in_array($item, $fields);
     });
 }
+
+function logged_in()
+{
+    if (!isset($_SESSION['auth']) || empty($_SESSION['auth']))
+        return null;
+
+    $sessionRepo = new \App\Repositories\Classes\SessionRepository();
+    $session = $sessionRepo->findBy('session', $_SESSION['auth']);
+
+    $now = new DateTime();
+    if ($session->expires_at > $now ) {
+        return null;
+    }
+
+    if (empty($session->user_id)) {
+        dd("session of inexistent user");
+    }
+
+    $userRepo = new \App\Repositories\Classes\UserRepository();
+
+    return $userRepo->find($session->user_id);
+}

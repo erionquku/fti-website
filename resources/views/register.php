@@ -51,7 +51,7 @@
 
     $('#submitBtn').click(function () {
         $.ajax({
-            url: "<?php echo route('api.register.post'); ?>",
+            url: "<?php echo route('api.register'); ?>",
             method: "POST",
             data: {
                 "first_name": $("#first_name").val(),
