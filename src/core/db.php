@@ -15,13 +15,13 @@ $db_connection = new mysqli(
     $db_config['passwd'],
     $db_config['dbname']
 );
-//TODO
+
 function execute_query($query)
 {
     global $db_connection;
     return $db_connection->query($query);
 }
-//TODO
+
 if (!function_exists('escape_string')) {
     function escape_string($string)
     {
@@ -30,14 +30,15 @@ if (!function_exists('escape_string')) {
     }
 }
 
-//todo if not function-exists
-function quote_value($value)
-{
-    if (is_int($value) or is_float($value) or is_null($value) or is_bool($value)) {
-        return escape_string($value);
-    }
+if (!function_exists('quote_value')) {
+    function quote_value($value)
+    {
+        if (is_int($value) or is_float($value) or is_null($value) or is_bool($value)) {
+            return escape_string($value);
+        }
 
-    return "'" . escape_string($value) . "'";
+        return "'" . escape_string($value) . "'";
+    }
 }
 
 if (!function_exists('escape_strings_from_array')) {

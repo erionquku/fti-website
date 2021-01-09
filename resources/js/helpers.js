@@ -6,3 +6,23 @@ function showAlert(type, message, boldMessage = "") {
         '  <strong>' + boldMessage + '</strong> ' + message +
         '</div>'
 }
+
+function login (path) {
+    $.ajax({
+        url: path,
+        method: "POST",
+        data: {
+            "password": $("#password").val()
+        },
+        success: function (msg) {
+            console.log("msg: " + msg);
+            const response = JSON.parse(msg);
+            if (!response.success) {
+                $('#alerts').empty().prepend(showAlert('danger', response.message , 'Error!'));
+            } else if (response.success) {
+                window.location.replace("/home/");
+            }
+            $("#alerts").last().hide().fadeIn(200);
+        }
+    });
+}

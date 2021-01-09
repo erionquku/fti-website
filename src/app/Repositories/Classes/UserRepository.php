@@ -33,6 +33,6 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         $user = self::findBy('email', $email);
         if (!isset($user) || !isset($user->password)) return null;
 
-        return $user->password == $password ? $user : null ;
+        return $user->password == $password ? $user : null;
     }
 }

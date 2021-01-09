@@ -1,11 +1,11 @@
 <?php
 
 
-namespace App\Models\Notification;
+namespace App\Models\Announcement;
 
 use Core\Models\BaseModel;
 
-class Notification extends BaseModel
+class Announcement extends BaseModel
 {
 
 }

@@ -1,6 +1,3 @@
-<?php
-include_once("utils/sidebar.php");
-?>
 
 <link rel="stylesheet" href=" <?php resource("plugins/ekko-lightbox/ekko-lightbox.css"); ?> ">
 

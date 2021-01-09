@@ -1,7 +1,3 @@
-<?php
-include_once("utils/sidebar.php");
-?>
-
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -67,7 +63,7 @@ include_once("utils/sidebar.php");
             <div class="row">
                 <div class="col text-center">
                     <div class="form-group">
-                        <button type="button" data-toggle="modal" data-target="#exampleModalCenter"
+                        <button type="button" data-toggle="modal" data-target="#uploadModalCenter"
                                 class="btn-primary btn">
                             <i class="fa fa-upload"></i> Upload a book!
                         </button>
@@ -76,12 +72,12 @@ include_once("utils/sidebar.php");
             </div>
 
             <!-- Modal -->
-            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
-                 aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal fade" id="uploadModalCenter" tabindex="-1" role="dialog"
+                 aria-labelledby="uploadModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalCenterTitle">Upload a book</h5>
+                            <h5 class="modal-title" id="uploadModalCenterTitle">Upload a book</h5>
                             <button id="xButtonModal" type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>

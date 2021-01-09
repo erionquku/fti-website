@@ -1,10 +1,10 @@
 {
   "autoload": {
     "psr-4": {
-      "App\\" : "src/app",
-      "Core\\" : "src/core"
+      "App\\": "src/app",
+      "Core\\": "src/core"
     },
-    "files" : [
+    "files": [
       "src/app/helpers.php",
       "src/core/db.php",
       "src/core/translate.php",
@@ -13,15 +13,18 @@
     ]
   },
   "scripts": {
-    "push" : [
+    "push": [
       "git add .",
       "git commit -m \"auto push\"",
       "git push origin"
     ],
-    "pull" : [
+    "pull": [
       "git stash save",
       "git pull origin",
       "composer dump autoload"
     ]
+  },
+  "require": {
+    "setasign/fpdi": "^2.3"
   }
 }

@@ -3,28 +3,47 @@
 
 namespace App\Controllers;
 
-use App\Repositories\Classes\NotificationRepository;
+use App\Repositories\Classes\AnnouncementRepository;
 use App\Repositories\Classes\UserRepository;
 use Core\Controllers\BaseController;
 
-class NotificationController extends BaseController
+class AnnouncementController extends BaseController
 {
 
     public static function find($id) {
-        $notificationRepository = new NotificationRepository();
-        exit(json_encode($notificationRepository->find($id)));
+        $announcementRepository = new AnnouncementRepository();
+        exit(json_encode($announcementRepository->find($id)));
+    }
+
+    public static function store($request, $user) {
+        if ($user->role_type_id == 2 || $user->role_type_id == 3) {
+
+            $announcementRepo = new AnnouncementRepository();
+
+            $announcement = array('title' => $request['title'],
+                                'body' => $request['body'],
+                                'uploader_id' => $user->id);
+
+            if ($announcementRepo->store($announcement))
+                echo json_encode(array('status' => 'success'));
+            else
+                echo json_encode(array('status' => 'failed', 'message' => 'Please try again later'));
+
+        } else {
+            echo json_encode(array('status' => 'failed', 'message' => 'You do not have permission for this operation'));
+        }
     }
 
     public static function findAll() {
-        $notificationRepository = new NotificationRepository();
+        $announcementRepository = new AnnouncementRepository();
         $userRepo = new UserRepository();
-        $notifications = $notificationRepository->all();
-        foreach ($notifications as $notification) {
-            $user = $userRepo->find($notification->uploader_id);
-            $notification->uploader = $user;
-            $allNotifications[] = $notification;
+        $announcements = $announcementRepository->all();
+        foreach ($announcements as $announcement) {
+            $user = $userRepo->find($announcement->uploader_id);
+            $announcement->uploader = $user;
+            $allAnnouncements[] = $announcement;
         }
-        return $allNotifications;
+        return $allAnnouncements;
     }
 
 }

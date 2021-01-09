@@ -1,4 +1,5 @@
 <head>
+
     <link rel="stylesheet" href=" <?php resource("css/styles.css"); ?> ">
     <link rel="stylesheet" href=" <?php resource("css/adminlte.css"); ?> ">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -14,16 +15,21 @@
             crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
             integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
-    <script src=<?php resource('js/helpers.js'); ?>></script>
+    <script type="text/javascript" src="<?php resource('js/helpers.js'); ?>"></script>
     <title><?php echo ___($this->title) ?? "" ?></title>
 </head>
 <?php
+
+
+if($this->sidebar) {
+    include_once __DIR__ . "/views/app/utils/navbar.php";
+    include_once __DIR__ . "/views/app/utils/sidebar.php";
+}
+
 include_once $this->body;
+
+if ($this->footer ?? false) {
+    include_once __DIR__ . "/views/app/utils/footer.php";
+}
 ?>
 
-<footer class="main-footer" >
-    <div class="float-right d-none d-sm-block">
-        <b>Version</b> 3.1.0-pre
-    </div>
-    <strong>Copyright &copy; 2014-2020 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
-</footer>

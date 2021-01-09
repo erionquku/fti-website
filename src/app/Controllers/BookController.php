@@ -12,6 +12,12 @@ class BookController extends BaseController
 {
     const path = 'storage/books/';
 
+    public static function getAll()
+    {
+//        (new BookRepository())->findAllBy("deleted", "N");
+        return (new BookRepository())->all();
+    }
+
     public static function download($bookId)
     {
         if (empty($bookId))

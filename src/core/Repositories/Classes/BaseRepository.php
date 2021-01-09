@@ -56,25 +56,28 @@ abstract class BaseRepository implements RepositoryInterface
         return $result["count(*)"];
     }
 
-    public function findBy($column, $value) : BaseModel
+    public function findBy($column, $value)
     {
         $model = new $this->model;
         $value = quote_value($value);
-        $result = execute_query("SELECT * FROM $this->table_name WHERE $column = $value")
+        $result = execute_query("SELECT * FROM `$this->table_name` WHERE `$column` = $value")
             ->fetch_assoc();
 
         if (!empty($result))
             foreach ($result as $key => $value) {
                 $model->$key = $value;
             }
+        else
+            return false;
 
         return $model;
     }
 
-    public function findAllBy($column, $value) : array
+    public function findAllBy($column, $value): array
     {
         $collection = [];
-        $results = execute_query("SELECT * FROM $this->table_name WHERE $column = $value");
+        $query = "SELECT * FROM $this->table_name WHERE `$column` = '$value'";
+        $results = execute_query($query);
         foreach ($results as $result) {
             $model = new $this->model;
             foreach ($result as $key => $value) {
@@ -85,21 +88,30 @@ abstract class BaseRepository implements RepositoryInterface
         return $collection;
     }
 
-    public function findAllByData($data) : array
+    public function findAllByData($data): array
     {
         $collection = [];
-        $query = "SELECT * FROM $this->table_name WHERE 1=1";
-        foreach ($data as $key => $value) {
-            $query .= " AND $key = " . quote_value($value);
-        }
-        $results = execute_query($query);
-        foreach ($results as $result) {
-            $model = new $this->model;
-            foreach ($result as $key => $value) {
-                $model->$key = $value;
+
+        if ($data) {
+            $keys = array_keys($data);
+            $query = "SELECT * FROM $this->table_name WHERE ";
+            foreach ($data as $key => $value) {
+                $query .= "`$key` = " . quote_value($value);
+                if (end($keys) != $key) {
+                    $query .= " AND ";
+                }
             }
-            $collection[] = $model;
+            $results = execute_query($query);
+
+            foreach ($results as $result) {
+                $model = new $this->model;
+                foreach ($result as $key => $value) {
+                    $model->$key = $value;
+                }
+                $collection[] = $model;
+            }
         }
+
         return $collection;
     }
 
@@ -112,10 +124,12 @@ abstract class BaseRepository implements RepositoryInterface
     {
         $query = "UPDATE $this->table_name SET ";
 
+        $first = true;
         foreach ($data as $key => $value) {
-            $query .= "$key = " . quote_value($value) . ",";
+            !$first ? $query .= ", " : $first = false;
+            $query .= "$key = " . quote_value($value);
         }
-        $query .= "WHERE $this->primary_key = $id";
+        $query .= " WHERE $this->primary_key = $id";
 
         return execute_query($query);
     }
@@ -151,6 +165,7 @@ abstract class BaseRepository implements RepositoryInterface
     {
         $collection = [];
         $results = execute_query("SELECT * FROM " . $this->table_name());
+//        dd($results);
         foreach ($results as $result) {
             $model = new $this->model;
             foreach ($result as $key => $value) {

@@ -3,20 +3,20 @@
 
 namespace App\Repositories\Classes;
 
-use App\Models\Notification\Notification;
+use App\Models\Announcement\Announcement;
 use Core\Repositories\Classes\BaseRepository;
 
-class NotificationRepository extends BaseRepository
+class AnnouncementRepository extends BaseRepository
 {
 
     public function model(): string
     {
-        return Notification::class;
+        return Announcement::class;
     }
 
     public function table_name(): string
     {
-        return "notifications";
+        return "announcements";
     }
 
     public function primary_key(): string
