@@ -36,10 +36,28 @@ $router->addRoute("POST",'/api/reset/password/', function() {
 }, 'api.reset_password');
 
 if (!empty($user = logged_in())) {
+    $user->permissions();
+
+    $router->addRoute("POST", "/api/permissions/", function () use ($user) {
+        \App\Controllers\PermissionsController::update($_POST);
+    }, 'api.permission.update', $user->permissions->adm_permissions_edit ?? false);
+
+    $router->addRoute("POST", "/api/user/language/:lang/", function ($lang) use ($user) {
+        \App\Controllers\UserController::changeLanguage($lang, $user);
+    }, 'api.language.change');
+
+    $router->addRoute("POST", "/api/user/personal/edit/:id/", function ($id) use ($user) {
+        if (($id == $user->id && $user->permissions->can_edit_own_personal_info) || $user->permissions->can_edit_all_personal_info)
+            \App\Controllers\PersonalDataController::update($id, $_POST);
+    }, 'api.user.personal.edit');
+
+    $router->addRoute("POST", '/api/books/lend/delete/:id/', function ($id) {
+        \App\Controllers\BookBorrowController::delete($id);
+    }, 'api.books.delete_borrowed', $user->permissions->adm_books_edit ?? false);
 
     $router->addRoute("POST", '/api/books/lend', function () use ($user) {
         \App\Controllers\BookBorrowController::lend($_POST, $user);
-    }, 'api.books.lend');
+    }, 'api.books.lend', $user->permissions->adm_books_edit ?? false);
 
     $router->addRoute("GET", '/api/books/lend/:id/', function ($id) {
         \App\Controllers\BookBorrowController::getLentBook($id);
@@ -47,15 +65,20 @@ if (!empty($user = logged_in())) {
 
     $router->addRoute("POST", '/api/books/lend/:id/', function ($id) use ($user) {
         \App\Controllers\BookBorrowController::update($id, $_POST, $user);
-    }, 'api.books.edit_lend_id');
+    }, 'api.books.edit_lend_id', $user->permissions->adm_edit_books ?? false);
 
-    $router->addRoute("POST", '/api/books/upload', function () use ($user) {
+    $router->addRoute("POST", '/api/books/upload/', function () use ($user) {
         \App\Controllers\BookController::upload($_POST, $user);
-    }, 'api.books.upload');
+    }, 'api.books.upload', $user->permissions->can_upload_books);
+
+    $router->addRoute("POST", '/api/books/delete/:id/', function ($id) {
+        \App\Controllers\BookController::delete($id);
+    }, 'api.books.delete', $user->permissions->can_delete_books);
 
     $router->addRoute("GET",'/api/books/download/:id', function($id) {
         \App\Controllers\BookController::download($id);
-    }, 'api.books.download');
+    }, 'api.books.download', $user->permissions->can_download_books);
+
 
     $router->addRoute("POST", '/api/announcement/', function () use ($user) {
         \App\Controllers\AnnouncementController::store($_POST, $user);

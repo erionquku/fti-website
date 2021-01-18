@@ -1,4 +1,3 @@
-<!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
 
     <!-- Content Header (Page header) -->
@@ -16,123 +15,103 @@
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
-            <!-- Small boxes (Stat box) -->
-            <div class="row">
-                <div class="col-lg-3 col-6">
-                    <!-- small box -->
-                    <div class="small-box bg-info">
-                        <div class="inner">
-                            <h3>69</h3>
 
-                            <p>Kredite</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-bag"></i>
+            <div class="row ">
+                <div class="col-md-8 border border-secondary">
+                    NOTAT LMAO
+                </div>
+                <div class="col-md-4">
+
+                    <div class="small-box bg-success">
+                        <div class="inner">
+                            <h3>9.999</h3>
+                            <p><?php __('average')?> </p>
                         </div>
                         <a href="<?php echo route('profile_page') ?>" class="small-box-footer">More info <i
                                     class="fa fa-arrow-circle-right"></i></a>
                     </div>
-                </div>
-                <!-- ./col -->
-                <div class="col-lg-3 col-6">
-                    <!-- small box -->
+
+
                     <div class="small-box bg-success">
                         <div class="inner">
-                            <h3>100<sup style="font-size: 20px">%</sup></h3>
-
-                            <p>Provime te marra</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-stats-bars"></i>
+                            <h3>100</h3>
+                            <p><?php __('credits') ?></p>
                         </div>
                         <a href="<?php echo route('courses_page') ?>" class="small-box-footer">More info <i
                                     class="fa fa-arrow-circle-right"></i></a>
                     </div>
-                </div>
-                <!-- ./col -->
-                <div class="col-lg-3 col-6">
-                    <!-- small box -->
+
+
                     <div class="small-box bg-warning">
                         <div class="inner">
-                            <h3>Informatike</h3>
-
-                            <p>Dega</p>
+                            <h3><?php echo count($this->user->borrowed_books) ?></h3>
+                            <p><?php __('borrowed_books') ?></p>
                         </div>
-                        <div class="icon">
-                            <i class="ion ion-person-add"></i>
-                        </div>
-                        <a href="<?php echo route('profile_page') ?>" class="small-box-footer">More info <i
+                        <a href="<?php echo route('books_page') ?>" class="small-box-footer">More info <i
                                     class="fa fa-arrow-circle-right"></i></a>
                     </div>
-                </div>
-                <!-- ./col -->
-                <div class="col-lg-3 col-6">
-                    <!-- small box -->
+
                     <div class="small-box bg-danger">
                         <div class="inner">
-                            <h3>0</h3>
-
-                            <p>Test</p>
+                            <h3>Not Verified</h3>
+                            <p><?php __('payment') ?></p>
                         </div>
-                        <div class="icon">
-                            <i class="ion ion-pie-graph"></i>
-                        </div>
-                        <a href="<?php echo route('profile_page') ?>" class="small-box-footer">More info <i
+                        <a href="<?php echo route('finance_page') ?>" class="small-box-footer">More info <i
                                     class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-                <!-- ./col -->
             </div>
-        </div>
-        <div class="container-fluid">
-            <div class="row">
 
-                <div class="col-md-5">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title"><i
-                                        class="fa fa-bullhorn"></i> <?php __('home.announcements_title'); ?> </h3>
 
-                        <?php
-                            if ($this->user->role_type_id != 1)
-                                echo '<div class="card-tools">
+            <div class="container-fluid">
+                <div class="row">
+
+                    <div class="col-md-5">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title"><i
+                                            class="fa fa-bullhorn"></i> <?php __('home.announcements_title'); ?> </h3>
+
+                                <?php
+                                if ($this->user->role_type_id != 1)
+                                    echo '<div class="card-tools">
                                         <button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal"
                                                 data-target="#addAnnouncementModal">
-                                             __("home.announcement_add")
+                                             ' . ___("home.announcement_add") . '
                                         </button>
                                     </div>';
-                        ?>
-
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body table-responsive p-0">
-                            <table class="table table-hover text-nowrap" id="announcements_table">
-                                <tbody>
-                                <?php
-                                foreach ($this->announcements as $announcement) {
-                                    echo "<tr>";
-                                    echo "<td>$announcement->id</td>";
-                                    echo "<td><b>$announcement->title</b></td>";
-                                    echo "<td>" . ($announcement->uploader->first_name ?? '-') . " ";
-                                    echo ($announcement->uploader->last_name ?? '-') . "</td>";
-                                    echo "<td>$announcement->created_at</td>";
-                                    echo "</tr>";
-                                }
-
                                 ?>
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- /.card-body -->
-                    </div>
-                    <!-- /.card -->
-                </div>
-                <div class="col-md-7">
-                    TEST SECOND
-                </div>
 
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body table-responsive p-0">
+                                <table class="table table-hover text-nowrap" id="announcements_table">
+                                    <tbody>
+                                    <?php
+                                    foreach ($this->announcements as $announcement) {
+                                        echo "<tr>";
+                                        echo "<td>$announcement->id</td>";
+                                        echo "<td><b>$announcement->title</b></td>";
+                                        echo "<td>" . ($announcement->uploader->first_name ?? '-') . " ";
+                                        echo ($announcement->uploader->last_name ?? '-') . "</td>";
+                                        echo "<td>$announcement->created_at</td>";
+                                        echo "</tr>";
+                                    }
+
+                                    ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <div class="col-md-7">
+                        TEST SECOND
+                    </div>
+
+                </div>
             </div>
-        </div>
     </section>
 
 

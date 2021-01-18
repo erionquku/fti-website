@@ -8,6 +8,8 @@ session_start();
 require_once "vendor/autoload.php";
 include "api/index.php";
 
+$router->setLoginNeeded(true);
+
 $router->addRoute("GET", '/', function () {
     View::make()
         ->noSidebar()
@@ -64,7 +66,6 @@ $router->addRoute("GET", '/register/', function () {
 }, 'register');
 
 
-
 $router->addRoute("GET", '/register/:token/', function ($token_str) {
     $token = \App\Controllers\RegistrationTokenController::getbyToken($token_str);
     validateToken($token);
@@ -96,33 +97,24 @@ $router->addRoute("GET", '/manual_register/', function () {
 }, 'manual_register');
 
 
-//$router->addRoute("GET",'/users/', function(){
-//    \App\Controllers\UserController::index();
-//});
-//
-//
-//$router->addRoute("GET",'/users/:id', function($id){
-//    \App\Controllers\UserController::show($id);
-//});
-//
-//$router->addRoute("GET",'/users/:id', function($id){
-//    \App\Controllers\UserController::show($id);
-//});
-
 $all_user_pages = array('home', 'courses', 'documents', 'finance', 'links', 'profile', 'attendance', 'faq');
-$user_pages = array('courses', 'documents', 'finance', 'links', 'profile', 'attendance', 'faq');
+$user_pages = array('courses', 'documents', 'finance', 'links', 'attendance', 'faq');
 $adm_pages = array('books', 'students');
 
 if (!empty($user = logged_in())) {
+
+    $now = new DateTime();
+    $lock = ((array)$now)['date'] > $user->session->expires_at;
+    $router->setLock($lock);
+    $router->setLoginNeeded(false);
+    $user->permissions();
+
 
     $router->addRoute("GET", '/logout/', function () use ($user) {
         \App\Controllers\UserController::logout($user->id);
         redirect('/home/');
         session_destroy();
     }, 'logout');
-
-    $now = new DateTime();
-    if (((array)$now)['date'] < $user->session->expires_at) {
 
         foreach ($user_pages as $page) {
             $router->addRoute("GET", "/" . $page . '/', function () use ($user, $page) {
@@ -133,11 +125,46 @@ if (!empty($user = logged_in())) {
             }, $page . '_page');
         }
 
-        $router->addRoute("GET", "/profile/:id/", function ($id) {
-            dd((new \App\Repositories\Classes\UserRepository())->find($id));
-        }, "profile_id");
+        $router->addRoute("GET", "/documents/:type/:id/", function ($type, $id) use ($user) {
+            $student = (new \App\Repositories\Classes\UserRepository())->find($id);
+            $student->personal();
+            \App\Vertetim::generate($type, $student);
+        }, 'generate_document', $user->permissions->can_generate_own_documents);
+
+        $router->addRoute("GET", "/profile/:id/", function ($id) use ($user, $page) {
+            $userRepo = new \App\Repositories\Classes\UserRepository();
+            $student = $userRepo->find($id);
+            if (!isset($student->first_name))
+            {
+                (new \Core\View())
+                    ->make()
+                    ->noSidebar()
+                    ->assign("error_desc", "This user doesn't exist!")
+                    ->assign("error_desc2", "The profile page you are trying to view doesn't exist!")
+                    ->display("error/template.php");
+                die();
+            }
+
+            $student->bootRelations();
+            (new \Core\View())
+                ->assign('user', $user)
+                ->assign('student', $student)
+                ->assign('page', 'profile')
+                ->display('app/profile.php');
+
+        }, "profile_id", $user->permissions->can_view_all_profiles);
+
+        $router->addRoute("GET", "/profile/", function () use ($user, $page) {
+            $user->bootRelations();
+            (new \Core\View())
+                ->assign('user', $user)
+                ->assign('student', $user)
+                ->assign('page', 'profile')
+                ->display('app/profile.php');
+        }, 'profile_page', $user->permissions->can_view_own_profile);
 
         $router->addRoute("GET", "/home/", function () use ($user, $page) {
+            $user->bootRelations();
             $view = new \Core\View();
             $view->assign('user', $user);
             $view->assign('page', 'home');
@@ -153,7 +180,7 @@ if (!empty($user = logged_in())) {
                 ->assign('books', \App\Controllers\BookController::findAllByCourseId($course_id))
                 ->assign('grades', \App\Controllers\GradeController::findAllByCourseIdAndStudentId($course_id, $user->id))
                 ->display('app/course.php');
-        });
+        }, 'course_id');
 
         $router->addRoute("GET", "/books/", function () use ($user) {
             $view = new \Core\View();
@@ -171,8 +198,15 @@ if (!empty($user = logged_in())) {
             $view->display('app/books.php');
         }, 'books_page');
 
-        $router->addRoute("GET", "/books/:id/", function ($id) {
-            dd((new \App\Repositories\Classes\BookRepository())->find($id));
+        $router->addRoute("GET", "/books/:id/", function ($id) use ($user) {
+            $book = (new \App\Repositories\Classes\BookRepository)->find($id);
+            $book->bootRelations();
+//            exit(json_encode((array) $book));
+            (new \Core\View())
+                ->setTitle("Book")
+                ->assign('user', $user)
+                ->assign('book', $book)
+                ->display("app/book_single.php");
         }, "book_id");
 
         $router->addRoute("GET", '/lockscreen/', function () use ($user) {
@@ -184,38 +218,9 @@ if (!empty($user = logged_in())) {
         }, 'lockscreen');
 
         $router->addRoute("GET", '/user/', function () use ($user) {
-            dd($user);
+            $user->bootRelations();
+            exit(json_encode((array)$user));
         });
-
-    } else {
-        $router->addRoute("GET", '/lockscreen/', function () use ($user) {
-            (new \Core\View())
-                ->noSidebar()
-                ->setTitle("Lockscreen")
-                ->assign('user', $user)
-                ->display("lockscreen.php");
-        }, 'lockscreen');
-
-        foreach ($all_user_pages as $page) {
-            $router->addRoute("GET", "/" . $page . '/', function () {
-                redirect('/lockscreen/');
-            }, $page . '_page');
-        }
-    }
-
-    if ($user->role_type_id == '1') {
-        foreach ($adm_pages as $page) {
-            $router->addRoute("GET", "/adm/" . $page . '/', function () {
-                (new \Core\View())
-                    ->make()
-                    ->noSidebar()
-                    ->assign("error_desc", "Missing Permissions")
-                    ->assign("error_desc2", "Page you are trying to view is for administrators only!")
-                    ->setTitle("Error!")
-                    ->display("error/template.php");
-            }, $page . '_page');
-        }
-    } else {
 
         $router->addRoute("GET", "/adm/students/", function () use ($user) {
             (new \Core\View())
@@ -224,7 +229,18 @@ if (!empty($user = logged_in())) {
                 ->assign('page', 'adm_students_page')
                 ->setTitle("Administration")
                 ->display("app/adm/students.php");
-        }, 'adm_students_page');
+        }, 'adm_students_page', $user->permissions->adm_students_view);
+
+        $router->addRoute("GET", "/adm/books/:returned", function ($returned) use ($user) {
+            if ($returned != "Y" && $returned != "N") $returned = "N";
+            (new \Core\View())
+                ->assign('user', $user)
+                ->assign('book_borrow', \App\Controllers\BookBorrowController::getAllReturned($returned))
+                ->assign('books', \App\Controllers\BookController::getAll())
+                ->assign('page', 'adm_books_page')
+                ->setTitle("Administration")
+                ->display("app/adm/books.php");
+        }, 'adm_books_page_filter', $user->permissions->adm_books_view);
 
         $router->addRoute("GET", "/adm/books/", function () use ($user) {
             (new \Core\View())
@@ -234,16 +250,19 @@ if (!empty($user = logged_in())) {
                 ->assign('page', 'adm_books_page')
                 ->setTitle("Administration")
                 ->display("app/adm/books.php");
-        }, 'adm_books_page');
+        }, 'adm_books_page', $user->permissions->adm_books_view);
 
-    }
+        $router->addRoute("GET", "/adm/permissions/", function () use ($user) {
+            (new \Core\View())
+                ->assign('user', $user)
+                ->assign('page', 'adm_permissions_page')
+                ->assign('permissions', \App\Controllers\PermissionsController::getAll())
+                ->setTitle("Administration")
+                ->display("app/adm/permissions.php");
+        }, 'adm_permissions_page', $user->permissions->adm_permissions_view);
 
-} else {
-    foreach (array_merge($all_user_pages, $adm_pages) as $page) {
-        $router->addRoute("GET", "/" . $page . '/', function () {
-            redirect('/login/');
-        }, $page . '_page');
-    }
+
+
 }
 
 $router->doRouting();

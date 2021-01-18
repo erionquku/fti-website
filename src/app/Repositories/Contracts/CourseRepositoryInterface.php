@@ -4,7 +4,9 @@
 namespace App\Repositories\Contracts;
 
 
-interface CourseRepositoryInterface
+use Core\Repositories\Contracts\RepositoryInterface;
+
+interface CourseRepositoryInterface extends RepositoryInterface
 {
 
 }

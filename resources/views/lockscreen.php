@@ -18,7 +18,7 @@
     <div class="lockscreen-item">
         <!-- lockscreen image -->
         <div class="lockscreen-image">
-            <img src="" alt="User Image">
+            <img src="<?php storage('profilepics/thumbnail/default.png') ?>" alt="User Image">
         </div>
         <!-- /.lockscreen-image -->
 

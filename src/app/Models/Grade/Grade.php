@@ -3,8 +3,9 @@
 
 namespace App\Models\Grade;
 
+use Core\Models\BaseModel;
 
-class Grade
+class Grade extends BaseModel
 {
 
 }

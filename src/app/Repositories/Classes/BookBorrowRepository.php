@@ -3,8 +3,7 @@
 
 namespace App\Repositories\Classes;
 
-
-use App\Models\Book\BookBorrow;
+use App\Models\BookBorrow\BookBorrow;
 use App\Repositories\Contracts\BookBorrowRepositoryInterface;
 use Core\Repositories\Classes\BaseRepository;
 

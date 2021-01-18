@@ -18,6 +18,13 @@ class BookController extends BaseController
         return (new BookRepository())->all();
     }
 
+    public static function delete($id)
+    {
+        $bookRepo = new BookRepository();
+        if ($bookRepo->update(array("deleted" => "Y"), $id))
+            exit(json_encode(array("success" => true, "message" => "Sucessfully deleted")));
+    }
+
     public static function download($bookId)
     {
         if (empty($bookId))

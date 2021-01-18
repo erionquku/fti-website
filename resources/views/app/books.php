@@ -37,16 +37,16 @@
                                 <tr>
                                     <?php
                                     foreach ($this->books as $book) {
-                                        echo "<tr><td>" . $book->id . "</td>
-                                                <td>" . $book->title . "</td>
-                                                <td>" . $book->description . "</td>
-                                                <td>" . $book->author . "</td>
-                                                <td>" . $book->page_no . "</td>
-                                                <td>" . ($book->uploader->first_name ?? '-') . " " . ($book->uploader->last_name ?? '-') .  '</td>
-                                                <td><button id="download-'.$book->id.
-                                                        '" type="button" class="btn btn-block btn-outline-primary btn-sm">
-                                                Download
-                                                </button></td></tr>';
+
+                                        $bookUrl = str_replace(":id", $book->id, route('book_id'));
+                                        echo "<tr><td>$book->id</td>
+                                                <td><a href='$bookUrl'>$book->title</a></td>
+                                                <td>$book->description</td>
+                                                <td>$book->author</td>
+                                                <td>$book->page_no</td>
+                                                <td>" . ($book->uploader->first_name ?? '-') . " " . ($book->uploader->last_name ?? '-') .  "</td>
+                                                <td><i class='fa fa-2x fa-minus-circle' id='delete-$book->id'></i></td>
+                                                <td><i class='fa fa-2x fa-download' id='download-$book->id'></i></td></tr>";
                                     }
                                     ?>
                                 </tr>
@@ -148,9 +148,37 @@
 </div>
 
 
+<!-- Delete a book Modal -->
+<div class="modal fade" id="deleteModalCenter" tabindex="-1" role="dialog"
+     aria-labelledby="deleteModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalCenterTitle">Delete</h5>
+                <button id="deleteXButtonModal" type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div id="viewAlerts"></div>
+                    Are you sure you want to delete this book ?
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" id="deleteCloseBtn">Close</button>
+                <button type="button" class="btn btn-danger" id="deleteBookBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script type="text/javascript">
 
     let uploaded = false;
+    let deleteID = -1;
 
     $("#closeModalButton").click(function () {
         $("#xButtonModal").click();
@@ -202,12 +230,42 @@
         })
     });
 
-    $(".table tr button").click(function () {
-        let id = $(this).attr('id');
-        let id_val = id.substr(id.lastIndexOf('-')+1);
-        let url = '<?php echo route('api.books.download') ?>';
-        url = url.substr(0, url.lastIndexOf(":")) + id_val;
-        window.open(url, '_blank');
+
+    $("[id^=download-]")
+        .css('cursor', 'pointer')
+        .click(function () {
+            let id = $(this).attr('id');
+            let id_val = id.substr(id.lastIndexOf('-')+1);
+            let url = '<?php echo route('api.books.download') ?>';
+            url = url.substr(0, url.lastIndexOf(":")) + id_val;
+            window.open(url, '_blank');
+        });
+
+    $("[id^=delete-]")
+        .css('cursor', 'pointer')
+        .click(function (){
+            $("#deleteModalCenter").modal('show');
+            deleteID = $(this)[0].id.trim().substr($(this)[0].id.lastIndexOf('-')+1);
+        });
+
+    $("#deleteBookBtn").click(function() {
+        let url = "<?php echo route('api.books.delete'); ?>";
+        url = url.substr(0, url.lastIndexOf(":")) + deleteID + "/";
+
+        $.ajax({
+            url: url,
+            method: "POST",
+            success: function (msg) {
+                let response = jQuery.parseJSON(msg);
+                console.log(msg);
+                if (!response.success) {
+                    $('#viewAlerts').empty().prepend(showAlert('danger', response.message, 'Error!'));
+                } else if (response.success) {
+                    location.reload();
+                }
+                $("#viewAlerts").last().hide().fadeIn(200);
+            }
+        });
     });
 
 </script>

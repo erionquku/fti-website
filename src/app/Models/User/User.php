@@ -15,7 +15,14 @@ class User extends BaseModel
     public $lang = 'sq';
 
     public static $relations = [
-        'sessions'
+        'sessions',
+        'borrowed_books',
+        'lent_books',
+        'grades',
+        'role',
+        'class',
+        'personal',
+        'permissions'
     ];
 
     public static $mandatory_fields = array('first_name', 'last_name', 'email', 'password');

@@ -3,8 +3,7 @@
 
 namespace App\Controllers;
 
-
-use App\Models\Book\BookBorrow;
+use App\Models\BookBorrow\BookBorrow;
 use App\Repositories\Classes\BookBorrowRepository;
 use App\Repositories\Classes\BookRepository;
 use App\Repositories\Classes\UserRepository;
@@ -14,10 +13,25 @@ use DateTime;
 class BookBorrowController extends BaseController
 {
 
+    public static function getAllReturned($returned)
+    {
+        $bbRepo = new BookBorrowRepository();
+        return $bbRepo->findAllByData(array('deleted' => 'N', "returned" => $returned));
+    }
+
     public static function getAll()
     {
         $bbRepo = new BookBorrowRepository();
-        return $bbRepo->all();
+        return $bbRepo->findAllBy('deleted', 'N');
+    }
+
+    public static function delete($id)
+    {
+        $bbRepo = new BookBorrowRepository();
+        if ($bbRepo->update(array("deleted" => "Y"), $id))
+            exit(json_encode(array("success" => true, "message"=> "Sucessfully deleted!")));
+        else
+            exit(json_encode(array("success" => false, "message" => "Something went wrong!")));
     }
 
     public static function update($id, $request, $user)

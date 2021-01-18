@@ -27,16 +27,15 @@ abstract class BaseRepository implements RepositoryInterface
     {
         $model = new $this->model;
         $result = execute_query(
-            "SELECT * FROM $this->table_name
-                WHERE $this->primary_key = $id 
+            "SELECT * FROM `$this->table_name`
+                WHERE `$this->primary_key` = '$id' 
                 LIMIT 1")
             ->fetch_assoc();
 
-//        dd($result);
-        foreach ($result as $key => $value) {
-            $model->$key = $value;
-        }
-
+        if ($result != false)
+            foreach ($result as $key => $value) {
+                $model->$key = $value;
+            }
         return $model;
     }
 

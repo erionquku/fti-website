@@ -8,10 +8,23 @@
                     <h1 class="m-0"><?php __('books.title') ?> </h1>
                 </div>
                 <div class="col-auto">
-                    <button type="button" data-toggle="modal" data-target="#lendModalCenter"
-                            class="btn-primary btn">
+                    <a class="btn btn-outline-success"
+                            href="<?php echo str_replace(":returned", 'Y', route('adm_books_page_filter')) ?>">
+                        <i class="fa fa-check-circle-o"></i> Returned Books
+                    </a>
+                    <a class="btn btn-outline-danger"
+                            href="<?php echo str_replace(":returned", 'N', route('adm_books_page_filter')) ?>">
+                        <i class="fa fa-exclamation-circle"></i> Not Returned Books
+                    </a>
+                    <?php
+                    if ($this->user->permissions->adm_books_edit)
+                        echo <<<BTN
+                    <button type="button" data-toggle="modal" data-target="#lendModalCenter" class="btn-primary btn">
                         <i class="fa fa-plus"></i> Lend a book!
                     </button>
+BTN;
+                    ?>
+
                 </div><!-- /.col -->
             </div><!-- /.row -->
         </div>
@@ -48,8 +61,8 @@
                                         $bb->bootRelations();
 
                                         $bookUrl = str_replace(":id", $bb->book->id, route('book_id'));
-                                        $borrowerUrl = str_replace(":id", $bb->book->id, route('profile_id'));
-                                        $lenderUrl = str_replace(":id", $bb->book->id, route('profile_id'));
+                                        $borrowerUrl = str_replace(":id", $bb->user->id, route('profile_id'));
+                                        $lenderUrl = str_replace(":id", $bb->lent_user->id, route('profile_id'));
 
                                         echo "<tr><td>$bb->id </td>
                                                 <td><a href='$bookUrl'>" . $bb->book->title . "</a></td>
@@ -58,8 +71,9 @@
                                                 <td><p data-toggle='tooltip' title='$bb->borrowed_date'>" . time_elapsed_string($bb->borrowed_date) . "</p></td>
                                                 <td><a href='$lenderUrl'>" . $bb->lent_user->first_name . " " . $bb->lent_user->last_name . "</a></td>
                                                 <td>$bb->to_return_date</td>
-                                                <td class='text-center'><span class='lead'><span class='badge badge-" . ($bb->returned == 'Y' ? "success" : "danger") . "'>" . fullYN($bb->returned) . "</span></span></td>
-                                                <td><span id='editButton-$bb->id' class='fa fa-2x fa-edit'></span> </td>";
+                                                <td class='text-center'><span class='lead'><span class='badge badge-" . ($bb->returned == 'Y' ? "success" : "danger") . "'>" . fullYN($bb->returned) . "</span></span></td>" .
+                                            ($this->user->permissions->adm_books_edit ? "<td><span id='editButton-$bb->id' class='fa fa-2x fa-edit'></span> </td>
+                                                <td><span id='delButton-$bb->id' class='fa fa-2x fa-minus-circle'></span> </td>" : "" );
                                     }
                                     ?>
                                 </tr>
@@ -131,7 +145,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-secondary" id="closeBtn">Close</button>
+                            <button type="button" class="btn btn-outline-secondary" id="closeBtn" data-dismiss="modal">Close</button>
                             <button type="button" class="btn btn-success" id="lendBookBtn">Lend</button>
                         </div>
                     </div>
@@ -226,8 +240,35 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-secondary" id="editCloseBtn">Close</button>
+                            <button type="button" class="btn btn-outline-secondary" id="editCloseBtn" data-dismiss="modal">Close</button>
                             <button type="button" class="btn btn-success" id="saveBookBtn">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Delete a book borrowing Modal -->
+            <div class="modal fade" id="deleteModalCenter" tabindex="-1" role="dialog"
+                 aria-labelledby="deleteModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalCenterTitle">Delete</h5>
+                            <button id="deleteXButtonModal" type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container">
+                                <div id="viewAlerts"></div>
+                                Are you sure you want to delete this record ?
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" id="deleteCloseBtn" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-danger" id="deleteBookBtn">Delete</button>
                         </div>
                     </div>
                 </div>
@@ -243,15 +284,7 @@
     let lent = false;
     let saved = false;
     let clickedBB = -1;
-
-    $("#closeBtn").click(function () {
-        $("#xButtonModal").click();
-        if (lent) location.reload();
-    });
-
-    $("#editCloseBtn").click(function () {
-        $("#editXButtonModal").click();
-    });
+    let deleteClickedBB = -1;
 
     $("#lendBookBtn").click(function () {
         $("#lendBookBtn").text('Loading...')
@@ -286,13 +319,14 @@
     });
 
 
-    $('[id^=editButton]').css('cursor', 'pointer');
+    $("[id^=editButton-]").css('cursor', 'pointer');
+    $("[id^=delButton-]").css('cursor', 'pointer');
 
-    $("[id^=editButton]").click(function () {
+    $("[id^=editButton-]").click(function () {
         $("#editModalCenter").modal('show');
 
         let url = "<?php echo route('api.books.lend_id'); ?>";
-        let id = $(this)[0].id.substr(11);
+        let id = $(this)[0].id.substr($(this)[0].id.lastIndexOf('-')+1);
         url = url.substr(0, url.lastIndexOf(":")) + id.trim() + "/";
 
         clickedBB = id;
@@ -349,5 +383,33 @@
             }
         });
     });
+
+    $("[id^=delButton-]").click(function () {
+        $("#deleteModalCenter").modal('show');
+        deleteClickedBB = $(this)[0].id.substr($(this)[0].id.lastIndexOf('-')+1);
+    });
+
+    $("#deleteBookBtn").click(function () {
+        let url = "<?php echo route('api.books.delete_borrowed'); ?>";
+        url = url.substr(0, url.lastIndexOf(":")) + deleteClickedBB.trim() + "/";
+
+        $.ajax({
+            url: url,
+            method: "POST",
+            success: function (msg) {
+                let response = jQuery.parseJSON(msg);
+                console.log(msg);
+                if (!response.success) {
+                    $('#viewAlerts').empty().prepend(showAlert('danger', response.message, 'Error!'));
+                } else if (response.success) {
+                    $('#viewAlerts').empty().prepend(showAlert('success', response.message, 'Success!'));
+                    location.reload();
+                }
+                $("#viewAlerts").last().hide().fadeIn(200);
+            }
+        });
+    });
+
+
 
 </script>

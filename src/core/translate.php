@@ -49,7 +49,7 @@ if (!function_exists('__')) {
 if (!function_exists('___')) {
     function ___($text = '')
     {
-        $locale = strtolower($_SESSION['lang']->lang ?? 'sq');
+        $locale = strtolower($_SESSION['lang'] ?? 'sq');
         $translation = explode('.', $text);
 
         $index = null;

@@ -29,9 +29,27 @@ class UserController extends BaseController
         return (new UserRepository())->all();
     }
 
-    public static function create()
+//    public static function create()
+//    {
+//        // TODO : Shfaq registration form
+//    }
+
+    public static function changeLanguage($language, $user)
     {
-        // TODO : Shfaq registration form
+        $language = strtolower($language);
+        if ($language != "sq" && $language != "en" && $language != "it")
+            exit(json_encode(array("success" => false, "message" => "Invalid request")));
+
+        $_SESSION['lang'] = $language;
+
+        $userRepo = new UserRepository();
+        $status = $userRepo->update(array('lang' => $language), $user->id);
+
+        if ($status)
+            exit(json_encode(array("success" => true)));
+        else
+            exit(json_encode(array("success" => false, "message" => "Something went wrong. Please try again later!")));
+
     }
 
     public static function store($request)

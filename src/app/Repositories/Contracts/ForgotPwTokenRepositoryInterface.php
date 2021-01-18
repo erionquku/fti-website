@@ -4,7 +4,9 @@
 namespace App\Repositories\Contracts;
 
 
-interface ForgotPwTokenRepositoryInterface
+use Core\Repositories\Contracts\RepositoryInterface;
+
+interface ForgotPwTokenRepositoryInterface extends RepositoryInterface
 {
 
 }

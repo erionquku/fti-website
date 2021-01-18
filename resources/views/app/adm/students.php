@@ -29,18 +29,21 @@
                                     <th>First Name</th>
                                     <th>Last Name</th>
                                     <th>Email</th>
-                                    <th>Password</th>
+                                    <th>Role</th>
+                                    <th>Branch</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr>
                                     <?php
                                     foreach ($this->students as $student) {
+                                        $student->bootRelations();
                                         echo "<tr><td>" . $student->id . "</td>
                                                 <td>" . $student->first_name . "</td>
                                                 <td>" . $student->last_name . "</td>
                                                 <td>" . $student->email . "</td>
-                                                <td>" . $student->password . "</td>
+                                                <td>" . $student->role->name . "</td>
+                                                <td>" . ($student->class->branch ?? '') . "</td>
                                                 <td>" . '</td>
                                                 <td>';
                                     }

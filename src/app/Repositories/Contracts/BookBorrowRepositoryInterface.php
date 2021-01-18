@@ -4,7 +4,9 @@
 namespace App\Repositories\Contracts;
 
 
-interface BookBorrowRepositoryInterface
+use Core\Repositories\Contracts\RepositoryInterface;
+
+interface BookBorrowRepositoryInterface extends RepositoryInterface
 {
 
 }

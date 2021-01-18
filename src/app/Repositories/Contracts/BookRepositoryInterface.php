@@ -3,7 +3,9 @@
 
 namespace App\Repositories\Contracts;
 
-interface BookRepositoryInterface
+use Core\Repositories\Contracts\RepositoryInterface;
+
+interface BookRepositoryInterface extends RepositoryInterface
 {
 
     public function findAllByClassId($classId);
